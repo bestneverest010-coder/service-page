@@ -91,53 +91,54 @@ button {
 </header>
 
 <div class="container">
-
-  <!-- AC SERVICE -->
-  <div class="service">
-    <h2>🔧 AC Repair</h2>
-
-    <div class="card">
-      <div class="name">Vipul</div>
-      <div class="status available">Available</div>
-      <div class="buttons">
-        <a href="tel:+919850550784"><button class="call">Call</button></a>
-        <a href="https://wa.me/919850550784"><button class="whatsapp">WhatsApp</button></a>
-      </div>
-    </div>
-
-  </div>
-
-  <!-- CLEANING -->
-  <div class="service">
-    <h2>🧹 Cleaning</h2>
-
-    <div class="card">
-      <div class="name">Savi</div>
-      <div class="status busy">Busy</div>
-      <div class="buttons">
-        <a href="tel:+919697102494"><button class="call">Call</button></a>
-        <a href="https://wa.me/919697102494"><button class="whatsapp">WhatsApp</button></a>
-      </div>
-    </div>
-
-  </div>
-
-  <!-- PLUMBING -->
-  <div class="service">
-    <h2>🚰 Plumbing</h2>
-
-    <div class="card">
-      <div class="name">Sapna</div>
-      <div class="status available">Available</div>
-      <div class="buttons">
-        <a href="tel:+919970102494"><button class="call">Call</button></a>
-        <a href="https://wa.me/919970102494"><button class="whatsapp">WhatsApp</button></a>
-      </div>
-    </div>
-
-  </div>
-
+  <div id="staff-container"></div>
 </div>
 
+<script>
+const sheetURL = "PASTE_YOUR_CSV_LINK_HERE";
+
+fetch(sheetURL)
+  .then(response => response.text())
+  .then(data => {
+    const rows = data.split("\n").slice(1);
+    const container = document.getElementById("staff-container");
+
+    let currentService = "";
+
+    rows.forEach(row => {
+      const cols = row.split(",");
+      if(cols.length < 4) return;
+
+      const name = cols[0];
+      const service = cols[1];
+      const phone = cols[2];
+      const status = cols[3];
+
+      // Create service heading if changed
+      if(service !== currentService){
+        container.innerHTML += `<div class="service"><h2>${service}</h2></div>`;
+        currentService = service;
+      }
+
+      const card = `
+        <div class="card">
+          <div class="name">${name}</div>
+          <div class="status ${status.toLowerCase()}">${status}</div>
+          <div class="buttons">
+            <a href="tel:+91${phone}">
+              <button class="call">Call</button>
+            </a>
+            <a href="https://wa.me/91${phone}">
+              <button class="whatsapp">WhatsApp</button>
+            </a>
+          </div>
+        </div>
+      `;
+
+      container.innerHTML += card;
+    });
+  });
+</script>
+  
 </body>
 </html>
