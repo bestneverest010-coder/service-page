@@ -81,6 +81,13 @@ button {
 .busy {
   color: red;
 }
+
+  .phone {
+  font-size: 14px;
+  color: #555;
+  margin-top: 4px;
+}
+  
 </style>
 </head>
 
@@ -122,8 +129,9 @@ fetch(sheetURL)
 
       const card = `
         <div class="card">
-          <div class="name">${name}</div>
-          <div class="status ${status.toLowerCase()}">${status}</div>
+<div class="name">${name}</div>
+<div class="phone">📞 +91${phone}</div>
+<div class="status ${status.toLowerCase()}">${status}</div>
           <div class="buttons">
             <a href="tel:+91${phone}">
               <button class="call">Call</button>
