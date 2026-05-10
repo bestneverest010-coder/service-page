@@ -214,88 +214,113 @@ button {
 </div>
 
 <script>
+  <script>
+
 const sheetURL = "https://docs.google.com/spreadsheets/d/e/2PACX-1vRVcu8V2TmJvvpfKRu0EW4REa1Bb65fRKVExlad2uRx5Ge97Kqc6dMYk3n29sJ6cCYpvDjhGIGMExl_/pub?output=csv";
 
 fetch(sheetURL)
-  .then(response => response.text())
-  .then(data => {
+.then(response => response.text())
+.then(csv => {
 
-    const rows = data.split("\n").slice(1);
+    const rows = csv.split("\n").slice(1);
+
     const container = document.getElementById("department-container");
 
-    const departments = {};
+    const groupedDepartments = {};
 
     rows.forEach(row => {
-      const cols = row.split(",");
 
-      if(cols.length < 4) return;
+        const cols = row.split(",");
 
-      const department = cols[0].trim();
-const name = cols[1].trim();
-const post = cols[2].trim();
-const phone = cols[3].trim();
-      
-      if(!departments[department]){
-        departments[department] = [];
-      }
+        if(cols.length < 4) return;
 
-departments[department].push({
-  name,
-  post,
-  phone
-});
+        const department = cols[0].trim();
+        const name = cols[1].trim();
+        const post = cols[2].trim();
+        const number = cols[3].trim();
+
+        if(!groupedDepartments[department]){
+            groupedDepartments[department] = [];
+        }
+
+        groupedDepartments[department].push({
+            name,
+            post,
+            number
+        });
+
     });
 
-    for(const department in departments){
+    for(const department in groupedDepartments){
 
-      const deptId = department.replace(/\s/g, '');
+        const section = document.createElement("div");
+        section.className = "department-section";
 
-      container.innerHTML += `
-        <div class="department-card" onclick="toggleDepartment('${deptId}')">
-          ${department} ▼
-        </div>
+        const header = document.createElement("div");
+        header.className = "department-header";
+        header.innerHTML = `${department} ▼`;
 
-        <div class="staff-list" id="${deptId}">
-          ${departments[department].map(staff => `
-<div class="card">
+        const content = document.createElement("div");
+        content.className = "department-content";
 
-  <div class="name">${staff.name}</div>
+        groupedDepartments[department].forEach(person => {
 
-  <div class="post">${staff.post}</div>
+            const card = document.createElement("div");
+            card.className = "card";
 
-  <div class="phone">
-    📞 +91${staff.phone}
-  </div>
+            card.innerHTML = `
+                <h3>${person.name}</h3>
 
-  <div class="buttons">
+                <p class="post">
+                    ${person.post}
+                </p>
 
-    <a href="tel:+91${staff.phone}">
-      <button class="call">Call</button>
-    </a>
+                <p class="phone">
+                    📞 +91 ${person.number}
+                </p>
 
-    <a href="https://wa.me/91${staff.phone}">
-      <button class="whatsapp">WhatsApp</button>
-    </a>
+                <div class="buttons">
 
-  </div>
+                    <a href="tel:+91${person.number}">
+                        <button class="call">
+                            Call
+                        </button>
+                    </a>
 
-</div>
-          `).join("")}
-        </div>
-      `;
+                    <a href="https://wa.me/91${person.number}" target="_blank">
+                        <button class="whatsapp">
+                            WhatsApp
+                        </button>
+                    </a>
+
+                </div>
+            `;
+
+            content.appendChild(card);
+
+        });
+
+        header.addEventListener("click", () => {
+
+            if(content.style.display === "block"){
+                content.style.display = "none";
+            } else {
+                content.style.display = "block";
+            }
+
+        });
+
+        section.appendChild(header);
+        section.appendChild(content);
+
+        container.appendChild(section);
+
     }
-  });
 
-function toggleDepartment(id){
+})
+.catch(error => console.log(error));
 
-  const section = document.getElementById(id);
-
-  if(section.style.display === "block"){
-    section.style.display = "none";
-  } else {
-    section.style.display = "block";
-  }
-}
+</script>
 </script>
   
 </body>
