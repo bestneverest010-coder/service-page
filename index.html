@@ -6,12 +6,20 @@
 <title>JJ TVS Baramati</title>
 
 <style>
-body {
+
+  body {
+  font-family: Arial, sans-serif;
+  margin: 0;
+  background: #f4f6f9;
+}
 
 .header {
   position: sticky;
   top: 0;
   z-index: 1000;
+  background: #ffffff;
+  border-bottom: 3px solid #e0e0e0;
+  padding: 10px 20px;
 }
   
 .department-card {
@@ -44,6 +52,24 @@ body {
   color: black;
 }
 
+.department-section {
+  margin: 20px;
+}
+
+.department-header {
+  background: #243b55;
+  color: white;
+  padding: 20px;
+  border-radius: 15px;
+  font-size: 24px;
+  font-weight: bold;
+  cursor: pointer;
+}
+
+.department-content {
+  display: none;
+  margin-top: 10px;
+}
   .post {
   font-size: 18px;
   color: #555;
@@ -209,10 +235,6 @@ button {
   
   <div id="department-container"></div>
   
-<div class="container">
-  <div id="department-container"></div>
-</div>
-
 <script>
  
 
