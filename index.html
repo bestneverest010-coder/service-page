@@ -56,11 +56,6 @@ body {
   color: #444;
 }
 
-.status {
-  margin-top: 8px;
-  color: green;
-}
-
 .buttons {
   display: flex;
   gap: 10px;
@@ -147,11 +142,6 @@ button {
 .whatsapp {
   background: #25D366;
   color: white;
-}
-
-.status {
-  font-size: 12px;
-  margin-top: 5px;
 }
 
 .available {
@@ -244,7 +234,6 @@ fetch(sheetURL)
 const name = cols[1].trim();
 const post = cols[2].trim();
 const phone = cols[3].trim();
-const status = cols[4].trim();
       
       if(!departments[department]){
         departments[department] = [];
@@ -253,8 +242,7 @@ const status = cols[4].trim();
 departments[department].push({
   name,
   post,
-  phone,
-  status
+  phone
 });
     });
 
@@ -277,10 +265,6 @@ departments[department].push({
 
   <div class="phone">
     📞 +91${staff.phone}
-  </div>
-
-  <div class="status ${staff.status.toLowerCase()}">
-    ${staff.status}
   </div>
 
   <div class="buttons">
