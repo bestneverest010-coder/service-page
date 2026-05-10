@@ -41,10 +41,18 @@ body {
 .name {
   font-size: 22px;
   font-weight: bold;
+  color: black;
+}
+
+  .post {
+  font-size: 18px;
+  color: #555;
+  margin-top: 5px;
 }
 
 .phone {
-  margin-top: 5px;
+  margin-top: 8px;
+  font-size: 16px;
   color: #444;
 }
 
@@ -105,13 +113,13 @@ header {
   border-bottom: 2px solid #ddd;
   padding-bottom: 5px;
 }
-
+  
 .card {
   background: white;
-  padding: 15px;
-  margin-top: 10px;
-  border-radius: 10px;
-  box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+  padding: 18px;
+  border-radius: 15px;
+  margin: 15px;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.1);
 }
 
 .name {
@@ -233,19 +241,21 @@ fetch(sheetURL)
       if(cols.length < 4) return;
 
       const department = cols[0].trim();
-      const name = cols[1].trim();
-      const phone = cols[2].trim();
-      const status = cols[3].trim();
-
+const name = cols[1].trim();
+const post = cols[2].trim();
+const phone = cols[3].trim();
+const status = cols[4].trim();
+      
       if(!departments[department]){
         departments[department] = [];
       }
 
-      departments[department].push({
-        name,
-        phone,
-        status
-      });
+departments[department].push({
+  name,
+  post,
+  phone,
+  status
+});
     });
 
     for(const department in departments){
@@ -259,21 +269,33 @@ fetch(sheetURL)
 
         <div class="staff-list" id="${deptId}">
           ${departments[department].map(staff => `
-            <div class="card">
-              <div class="name">${staff.name}</div>
-              <div class="phone">📞 +91${staff.phone}</div>
-              <div class="status">${staff.status}</div>
+<div class="card">
 
-              <div class="buttons">
-                <a href="tel:+91${staff.phone}">
-                  <button class="call">Call</button>
-                </a>
+  <div class="name">${staff.name}</div>
 
-                <a href="https://wa.me/91${staff.phone}">
-                  <button class="whatsapp">WhatsApp</button>
-                </a>
-              </div>
-            </div>
+  <div class="post">${staff.post}</div>
+
+  <div class="phone">
+    📞 +91${staff.phone}
+  </div>
+
+  <div class="status ${staff.status.toLowerCase()}">
+    ${staff.status}
+  </div>
+
+  <div class="buttons">
+
+    <a href="tel:+91${staff.phone}">
+      <button class="call">Call</button>
+    </a>
+
+    <a href="https://wa.me/91${staff.phone}">
+      <button class="whatsapp">WhatsApp</button>
+    </a>
+
+  </div>
+
+</div>
           `).join("")}
         </div>
       `;
