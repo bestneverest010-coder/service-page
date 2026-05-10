@@ -7,6 +7,72 @@
 
 <style>
 body {
+
+.department-card {
+  background: #2c3e50;
+  color: white;
+  padding: 18px;
+  margin: 15px;
+  border-radius: 12px;
+  font-size: 22px;
+  font-weight: bold;
+  cursor: pointer;
+}
+
+.staff-list {
+  display: none;
+  margin: 10px 15px 20px 15px;
+}
+
+.card {
+  background: white;
+  padding: 15px;
+  border-radius: 12px;
+  margin-top: 10px;
+  box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+}
+
+.name {
+  font-size: 22px;
+  font-weight: bold;
+}
+
+.phone {
+  margin-top: 5px;
+  color: #444;
+}
+
+.status {
+  margin-top: 8px;
+  color: green;
+}
+
+.buttons {
+  display: flex;
+  gap: 10px;
+  margin-top: 12px;
+}
+
+button {
+  border: none;
+  padding: 10px 18px;
+  border-radius: 8px;
+  color: white;
+  cursor: pointer;
+  font-size: 16px;
+}
+
+.call {
+  background: #27ae60;
+}
+
+.whatsapp {
+  background: #25D366;
+}
+
+.buttons a {
+  text-decoration: none;
+}  
   font-family: Arial, sans-serif;
   margin: 0;
   background: #f4f6f9;
@@ -130,6 +196,8 @@ button {
 
 <body>
 
+  <div id="department-container"></div>
+
 <header class="header">
   <div class="header-content">
     <img src="Tvs_logo_png.png" alt="Logo" class="logo">
@@ -138,7 +206,7 @@ button {
 </header>
 
 <div class="container">
-  <div id="staff-container"></div>
+  <div id="department-container"></div>
 </div>
 
 <script>
@@ -147,45 +215,75 @@ const sheetURL = "https://docs.google.com/spreadsheets/d/e/2PACX-1vRVcu8V2TmJvvp
 fetch(sheetURL)
   .then(response => response.text())
   .then(data => {
-    const rows = data.split("\n").slice(1);
-    const container = document.getElementById("staff-container");
 
-    let currentService = "";
+    const rows = data.split("\n").slice(1);
+    const container = document.getElementById("department-container");
+
+    const departments = {};
 
     rows.forEach(row => {
       const cols = row.split(",");
+
       if(cols.length < 4) return;
 
-      const name = cols[0];
-      const service = cols[1];
-      const phone = cols[2];
-      const status = cols[3];
+      const department = cols[0].trim();
+      const name = cols[1].trim();
+      const phone = cols[2].trim();
+      const status = cols[3].trim();
 
-      // Create service heading if changed
-      if(service !== currentService){
-        container.innerHTML += `<div class="service"><h2>${service}</h2></div>`;
-        currentService = service;
+      if(!departments[department]){
+        departments[department] = [];
       }
 
-      const card = `
-        <div class="card">
-<div class="name">${name}</div>
-<div class="phone">📞 +91${phone}</div>
-<div class="status ${status.toLowerCase()}">${status}</div>
-          <div class="buttons">
-            <a href="tel:+91${phone}">
-              <button class="call">Call</button>
-            </a>
-            <a href="https://wa.me/91${phone}">
-              <button class="whatsapp">WhatsApp</button>
-            </a>
-          </div>
+      departments[department].push({
+        name,
+        phone,
+        status
+      });
+    });
+
+    for(const department in departments){
+
+      const deptId = department.replace(/\s/g, '');
+
+      container.innerHTML += `
+        <div class="department-card" onclick="toggleDepartment('${deptId}')">
+          ${department} ▼
+        </div>
+
+        <div class="staff-list" id="${deptId}">
+          ${departments[department].map(staff => `
+            <div class="card">
+              <div class="name">${staff.name}</div>
+              <div class="phone">📞 +91${staff.phone}</div>
+              <div class="status">${staff.status}</div>
+
+              <div class="buttons">
+                <a href="tel:+91${staff.phone}">
+                  <button class="call">Call</button>
+                </a>
+
+                <a href="https://wa.me/91${staff.phone}">
+                  <button class="whatsapp">WhatsApp</button>
+                </a>
+              </div>
+            </div>
+          `).join("")}
         </div>
       `;
-
-      container.innerHTML += card;
-    });
+    }
   });
+
+function toggleDepartment(id){
+
+  const section = document.getElementById(id);
+
+  if(section.style.display === "block"){
+    section.style.display = "none";
+  } else {
+    section.style.display = "block";
+  }
+}
 </script>
   
 </body>
